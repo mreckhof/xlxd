@@ -93,7 +93,7 @@ protected:
     bool IsValidAuthenticationPacket(const CBuffer &, CCallsign *, const CIp &);
     bool IsValidDisconnectPacket(const CBuffer &, CCallsign *);
     bool IsValidConfigPacket(const CBuffer &, CCallsign *, const CIp &);
-    bool IsValidOptionPacket(const CBuffer &, CCallsign *);
+    bool IsValidOptionPacket(const CBuffer &, CCallsign *, const CIp &);
     bool IsValidKeepAlivePacket(const CBuffer &, CCallsign *);
     bool IsValidRssiPacket(const CBuffer &, CCallsign *, int *);
     bool IsValidDvHeaderPacket(const CBuffer &, CDvHeaderPacket **, uint8 *, uint8 *);

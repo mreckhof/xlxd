@@ -236,7 +236,7 @@ void CDmrmmdvmProtocol::Task(void)
             
             // ignore...
         }
-        else if ( IsValidOptionPacket(Buffer, &Callsign) )
+        else if ( IsValidOptionPacket(Buffer, &Callsign, Ip) )
         {
             std::cout << "DMRmmdvm options packet from " << Callsign << " at " << Ip << std::endl;
             
@@ -250,7 +250,7 @@ void CDmrmmdvmProtocol::Task(void)
             //std::cout << Buffer << std::endl;
         }
     }
-    
+
     // handle end of streaming timeout
     CheckStreamsTimeout();
     
@@ -591,7 +591,7 @@ bool CDmrmmdvmProtocol::IsValidConfigPacket(const CBuffer &Buffer, CCallsign *ca
     return valid;
 }
 
-bool CDmrmmdvmProtocol::IsValidOptionPacket(const CBuffer &Buffer, CCallsign *callsign)
+bool CDmrmmdvmProtocol::IsValidOptionPacket(const CBuffer &Buffer, CCallsign *callsign, const CIp &Ip)
 {
     uint8 tag[] = { 'R','P','T','O' };
     
@@ -600,8 +600,14 @@ bool CDmrmmdvmProtocol::IsValidOptionPacket(const CBuffer &Buffer, CCallsign *ca
     {
         uint32 uiRptrId = MAKEDWORD(MAKEWORD(Buffer.data()[7],Buffer.data()[6]),MAKEWORD(Buffer.data()[5],Buffer.data()[4]));
         callsign->SetDmrid(uiRptrId, true);
+
         callsign->SetModule(MMDVM_MODULE_ID);
         valid = callsign->IsValid();
+
+	CClient *client = g_Reflector.GetClients()->FindClient(Ip, PROTOCOL_DMRMMDVM);
+	client->SetReflectorModule(Buffer.data()[8]);
+	std::cout << "DMRmmdvm client " << client->GetCallsign() << " linked on module " << client->GetReflectorModule() << " at " << Ip << std::endl;
+	g_Reflector.ReleaseClients();		
     }
     return valid;
 }
