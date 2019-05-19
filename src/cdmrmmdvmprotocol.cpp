@@ -668,8 +668,13 @@ bool CDmrmmdvmProtocol::IsValidDvHeaderPacket(const CBuffer &Buffer, CDvHeaderPa
                 uint32 uiRptrId = MAKEDWORD(MAKEWORD(Buffer.data()[14],Buffer.data()[13]),MAKEWORD(Buffer.data()[12],Buffer.data()[11]));
                 //uint8 uiVoiceSeq = (Buffer.data()[15] & 0x0F);
                 uint32 uiStreamId = *(uint32 *)(&Buffer.data()[16]);
-                
-                // call type
+               
+		//std::cout << "DMRD Header - SRC: " << (int)uiSrcId << "(" << (int)uiRptrId << ") DST: " << (int)uiDstId << " Slot: " << (int)uiSlot << " StreamID: " << (int)uiStreamId << std::endl; 
+
+		// HACK HACK HACK TO MAKE P25 WORK 
+		if(uiRptrId == 310257) { uiStreamId = 31665U; } 
+
+		// call type
                 *CallType = uiCallType;
                 
                 // link/unlink command ?
@@ -728,11 +733,14 @@ bool CDmrmmdvmProtocol::IsValidDvFramePacket(const CBuffer &Buffer, CDvFramePack
         {
             // crack DMR header
             //uint8 uiSeqId = Buffer.data()[4];
-            //uint32 uiSrcId = MAKEDWORD(MAKEWORD(Buffer.data()[7],Buffer.data()[6]),MAKEWORD(Buffer.data()[5],0));
-            //uint32 uiDstId = MAKEDWORD(MAKEWORD(Buffer.data()[10],Buffer.data()[9]),MAKEWORD(Buffer.data()[8],0));
-            //uint32 uiRptrId = MAKEDWORD(MAKEWORD(Buffer.data()[14],Buffer.data()[13]),MAKEWORD(Buffer.data()[12],Buffer.data()[11]));
+            uint32 uiSrcId = MAKEDWORD(MAKEWORD(Buffer.data()[7],Buffer.data()[6]),MAKEWORD(Buffer.data()[5],0));
+            uint32 uiDstId = MAKEDWORD(MAKEWORD(Buffer.data()[10],Buffer.data()[9]),MAKEWORD(Buffer.data()[8],0));
+            uint32 uiRptrId = MAKEDWORD(MAKEWORD(Buffer.data()[14],Buffer.data()[13]),MAKEWORD(Buffer.data()[12],Buffer.data()[11]));
             uint8 uiVoiceSeq = (Buffer.data()[15] & 0x0F);
             uint32 uiStreamId = *(uint32 *)(&Buffer.data()[16]);
+
+	    // HACK HACK HACK TO MAKE P25 WORK 
+	    if(uiRptrId == 310257) { uiStreamId = 31665U; } 
            
             // crack payload
             uint8 dmrframe[33];
@@ -815,8 +823,13 @@ bool CDmrmmdvmProtocol::IsValidDvLastFramePacket(const CBuffer &Buffer, CDvLastF
                 //uint32 uiSrcId = MAKEDWORD(MAKEWORD(Buffer.data()[7],Buffer.data()[6]),MAKEWORD(Buffer.data()[5],0));
                 //uint32 uiDstId = MAKEDWORD(MAKEWORD(Buffer.data()[10],Buffer.data()[9]),MAKEWORD(Buffer.data()[8],0));
                 //uint32 uiRptrId = MAKEDWORD(MAKEWORD(Buffer.data()[14],Buffer.data()[13]),MAKEWORD(Buffer.data()[12],Buffer.data()[11]));
+                uint32 uiSrcId = MAKEDWORD(MAKEWORD(Buffer.data()[7],Buffer.data()[6]),MAKEWORD(Buffer.data()[5],0));
+                uint32 uiDstId = MAKEDWORD(MAKEWORD(Buffer.data()[10],Buffer.data()[9]),MAKEWORD(Buffer.data()[8],0));
+                uint32 uiRptrId = MAKEDWORD(MAKEWORD(Buffer.data()[14],Buffer.data()[13]),MAKEWORD(Buffer.data()[12],Buffer.data()[11]));
                 //uint8 uiVoiceSeq = (Buffer.data()[15] & 0x0F);
                 uint32 uiStreamId = *(uint32 *)(&Buffer.data()[16]);
+                //std::cout << "DMRD Close - SRC: " << (int)uiSrcId << "(" << uiRptrId << ")" << " DST: " << (int)uiDstId << " Slot: " << (int)uiSlot << " StreamID: " << (int)uiStreamId << std::endl;
+
                 
                 // dummy ambe
                 uint8 ambe[9];

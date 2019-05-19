@@ -60,7 +60,7 @@
 
 // reflector ---------------------------------------------------
 
-#define NB_OF_MODULES                 10
+#define NB_OF_MODULES                 26 
 //#define NB_OF_MODULES                   NB_MODULES_MAX
 
 // protocols ---------------------------------------------------
@@ -127,7 +127,7 @@
 
 // DMRid database -----------------------------------------------
 
-#define DMRIDDB_USE_RLX_SERVER          1                                   // 1 = use http, 0 = use local file
+#define DMRIDDB_USE_RLX_SERVER          0                                   // 1 = use http, 0 = use local file
 #define DMRIDDB_PATH                    "/xlxd/dmrid.dat"                   // local file path
 #define DMRIDDB_REFRESH_RATE            180                                 // in minutes
 
